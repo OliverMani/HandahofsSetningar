@@ -1,2 +1,2 @@
-# RandomSetningar
-Forrit sem random generate'ar setningar á íslensku
+# Íslensk Gervigreind
+Basic gervigreind, segir random setningar á íslensku
