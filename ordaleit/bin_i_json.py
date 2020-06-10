@@ -53,6 +53,8 @@ class Ord:
 
 class MainClass:
 
+
+
 	def setup(self):
 		pass
 
@@ -60,10 +62,12 @@ class MainClass:
 		listi = {}
 		flokkur = data[0].get('ofl')
 		kyn = data[0].get('kyn')
-		komid = list(self.listi.data['no'].keys())
-		if data[0]['ord'] in komid:
-			print("Orðið er nú þegar þarna!")
-			return
+		k = self.listi.data.get(flokkur)
+		if k != None:
+			komid = list(k.keys())
+			if data[0]['ord'] in komid:
+				print("Orðið er nú þegar þarna!")
+				return
 
 		if flokkur == "no":
 			
@@ -114,10 +118,114 @@ class MainClass:
 			if self.listi.data.get('no') == None:
 				self.listi.data['no'] = {}
 			self.listi.data['no'][data[0].get('ord')] = listi
-			print("Orði bætt við!")
+			print("Nafnorði bætt við!")
 
 		elif flokkur == "so":
-			pass
+			for mynd in data[0].get('bmyndir'):
+
+				#þurfum að þátta g!
+				upplysingar = {}
+
+				g = mynd.get('g').split('-')
+
+				myndir = ['GM', 'MM', 'LHNT', 'LHÞT'] #Germynd, Miðmynd, Lýsingarháttur nútíðar, Lýsingarþáttur þátíðar
+				hattar = ['NH', 'FH', 'VH', 'BH'] # háttur, ekki hattur.... NH = , FH = Framsöguháttur, VH = viðtengingarháttur
+				tidir = ['NT', 'ÞT']
+				personur = ['1P', '2P', '3P']
+				tolur = ['ET', 'FT']
+				kyn = ['KK', 'KVK', 'HK']
+				foll = ['NFET', 'ÞFET', 'ÞGFET', 'EFET', 'NFFT', 'ÞFFT, ÞGFFT', 'EFFT']
+				beyging = ['SB', 'VB']
+				sagnbot = ['SAGNB'] # sagnbót
+
+				for x in g: #paring g code
+					if x in myndir:
+						upplysingar['mynd'] = x
+					elif x in hattar:
+						upplysingar['hattur'] = x
+					elif x in personur:
+						upplysingar['persona'] = x
+					elif x in tolur:
+						upplysingar['tala'] = x
+					elif x in kyn:
+						upplysingar['kyn'] = x
+					elif x in foll:
+						upplysingar['fall'] = x[:2]
+						if upplysingar['fall'] == 'ÞG':
+							upplysingar['fall'] += 'F'
+					elif x in beyging:
+						upplysingar['beyging'] = x
+					elif x in sagnbot:
+						upplysingar['sagnbot'] = True
+
+				if upplysingar.get('mynd') == None:
+					continue
+				if upplysingar.get('hattur') == None:
+					upplysingar['hattur'] = 'annad'
+
+				if upplysingar['mynd'] in ['GM', 'MM']:
+					if upplysingar['hattur'] in ['FH', 'VH']:
+						upplysingar['ord'] = mynd.get('b')
+
+						if listi.get('myndir') == None:
+							listi['myndir'] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')) == None:
+							listi['myndir'][upplysingar.get('mynd')] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')).get(upplysingar.get('hattur')) == None:
+							listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')).get(upplysingar.get('hattur')).get(upplysingar.get('persona')) == None:
+							listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')][upplysingar.get('persona')] = {}
+						
+						
+						listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')][upplysingar.get('persona')][upplysingar.get('tala')] = upplysingar['ord']
+					elif upplysingar['hattur'] == 'BH':
+						upplysingar['ord'] = mynd.get('b')
+
+						if listi.get('myndir') == None:
+							listi['myndir'] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')) == None:
+							listi['myndir'][upplysingar.get('mynd')] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')).get(upplysingar.get('hattur')) == None:
+							listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')] = {}
+						
+						
+						listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')][upplysingar.get('tala')] = upplysingar['ord']
+					else:
+
+						upplysingar['ord'] = mynd.get('b')
+
+						if listi.get('myndir') == None:
+							listi['myndir'] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')) == None:
+							listi['myndir'][upplysingar.get('mynd')] = {}
+						if listi.get('myndir').get(upplysingar.get('mynd')).get(upplysingar.get('hattur')) == None:
+							listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')] = []
+						
+						listi['myndir'][upplysingar.get('mynd')][upplysingar.get('hattur')].append(upplysingar)
+				elif upplysingar['mynd'] == 'LHNT':
+					if listi.get('myndir') == None:
+						listi['myndir'] = {}
+					listi['myndir']['LHNT'] = mynd.get('b')
+				else:
+					if listi.get('myndir') == None:
+						listi['myndir'] = {}
+					if listi.get('myndir').get('LHÞT') == None:
+						listi['myndir']['LHÞT'] = {}
+					if listi.get('myndir').get('LHÞT').get(upplysingar.get('beyging')) == None:
+						listi['myndir']['LHÞT'][upplysingar.get('beyging')] = {}
+					if listi.get('myndir').get('LHÞT').get(upplysingar.get('beyging')).get(upplysingar.get('kyn')) == None:
+						listi['myndir']['LHÞT'][upplysingar.get('beyging')][upplysingar.get('kyn')] = {}
+					
+
+					if upplysingar.get('fall') != None:
+						listi['myndir']['LHÞT'][upplysingar.get('beyging')][upplysingar.get('kyn')][upplysingar.get('fall')] = mynd.get('b')
+					
+
+
+			if self.listi.data.get('so') == None:
+				self.listi.data['so'] = {}
+			self.listi.data['so'][data[0].get('ord')] = listi
+			print("Sagnorði bætt við!")
 		elif flokkur == "lo":
 			pass
 
