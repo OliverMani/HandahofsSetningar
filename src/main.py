@@ -20,12 +20,19 @@ def taeta(file='resources/ordalisti.csv', folder='resources/ord/'):
 				write.write(word + '\n')
 
 class Generator:
-	def __init__(self, mappa='resources/ord/'):
+	def __init__(self, mappa='resources/ord/', setningar='resources/setningar.txt'):
 		self.stillingar = {}
+		self.setningar = setningar
 		self.mappa = mappa
 
+	def finna_setningu(self):
+		skra = open(self.setningar, 'r', encoding='utf-8')
+		linur = skra.read().split('\n')
+		skra.close()
+		return linur[random.randint(0, len(linur))-1]
+
 	def bua_til_setningu(self):
-		setning = "{no:NFETgr:kyn1=kyn} er {lo:FSB-{kyn1}-NFET}".split(' ');
+		setning = self.finna_setningu().split(' ');
 		nidurstada = ""
 		for x in setning:
 			_ord = self.fa_ord(x)
@@ -69,10 +76,13 @@ class Generator:
 							if self.stillingar[x]['ord'] == 'kyn':
 								self.stillingar[x]['notad'] = True
 								self.stillingar[x]['ord'] = kyn
+					
 					myndir = svar[0]['bmyndir']
+					if len(list(svar[0].get('bmyndir')[0].keys())) == 0:
+						return svar[0]['ord']
 					x = 0
 					for fall in myndir:
-						if fall['g'].lower() == mynd.lower():
+						if fall['g'].lower() == mynd.lower() or (flokkur == 'no' and 'gr' in mynd and mynd[0] == mynd[0].upper()):
 							return svar[0]['bmyndir'][x]['b']
 						#print(fall)
 						x += 1
