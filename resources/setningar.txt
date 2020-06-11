@@ -1,2 +1,2 @@
 {no:NFETgr:kyn1=kyn} er {lo:FSB-{kyn1}-NFET}
-{no:NFETgr:kyn1=kyn} er {ao:FST} {lo:FSB-{kyn1}-NFET}
+{no:NFETgr:kyn1=kyn} {so:GM-FH-ÞT-3P-ET} {no:ÞGFFT}

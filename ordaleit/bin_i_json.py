@@ -227,8 +227,32 @@ class MainClass:
 			self.listi.data['so'][data[0].get('ord')] = listi
 			print("Sagnorði bætt við!")
 		elif flokkur == "lo":
-			pass
-
+			for mynd in data[0].get('bmyndir'):
+				stig = mynd.get('g')[0]
+				styrkleiki = mynd.get('g')[1:3]
+				kyn = mynd.get('g').split('-')[1]
+				fall = mynd.get('g').split('-')[2][:2]
+				bil = 1 if fall[1] == 'G' else 0
+				if bil == 1:
+					fall += 'F'
+				tala = mynd.get('g').split('-')[2][2 + bil:]
+				if listi.get('myndir') == None:
+					listi['myndir'] = {}
+				if listi.get('myndir').get(stig) == None:
+					listi['myndir'][stig] = {}
+				if listi.get('myndir').get(stig).get(styrkleiki) == None:
+					listi['myndir'][stig][styrkleiki] = {}
+				if listi.get('myndir').get(stig).get(styrkleiki).get(kyn) == None:
+					listi['myndir'][stig][styrkleiki][kyn] = {}
+				if listi.get('myndir').get(stig).get(styrkleiki).get(kyn).get(tala) == None:
+					listi['myndir'][stig][styrkleiki][kyn][tala] = {}
+				
+				listi['myndir'][stig][styrkleiki][kyn][tala][fall] = mynd.get('b')
+			if self.listi.data.get('lo') == None:
+				self.listi.data['lo'] = {}
+			self.listi.data['lo'][data[0].get('ord')] = listi
+			print("Bætti við lýsingarorði")
+		
 
 	def main(self, args):
 		self.listi = Uppsetning('resources/ord.json')
@@ -238,8 +262,8 @@ class MainClass:
 		if len(args) > 0:
 			word = args[0]
 		else:
-			word = input("Sláðu inn nafnorð: ")
-		r = requests.get("https://bin.arnastofnun.is/api/ord/" + word)
+			word = input("Sláðu inn orð: ")
+		r = requests.get("https://bin.arnastofnun.is/api/beygingarmynd/" + word)
 		#print(r.status_code)
 		data = json.loads(r.content)
 		if type(data) != list:
@@ -250,7 +274,7 @@ class MainClass:
 			for x in range(len(data)):
 				guid = data[x].get('guid')
 				new_r = requests.get("https://bin.arnastofnun.is/api/ord/" + guid)
-				self.append_data(new_r.content)
+				self.append_data(json.loads(new_r.content))
 		else:
 			self.append_data(data)
 

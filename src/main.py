@@ -77,12 +77,14 @@ class Generator:
 								self.stillingar[x]['notad'] = True
 								self.stillingar[x]['ord'] = kyn
 					
-					myndir = svar[0]['bmyndir']
+					myndir = svar[0].get('bmyndir')
+					if myndir == None:
+						continue
 					if len(list(svar[0].get('bmyndir')[0].keys())) == 0:
 						return svar[0]['ord']
 					x = 0
 					for fall in myndir:
-						if fall['g'].lower() == mynd.lower() or (flokkur == 'no' and 'gr' in mynd and mynd[0] == mynd[0].upper()):
+						if fall['g'].lower() == mynd.lower() or (flokkur == 'no' and 'gr' in mynd and prufa[0] == prufa[0].upper()):
 							return svar[0]['bmyndir'][x]['b']
 						#print(fall)
 						x += 1
