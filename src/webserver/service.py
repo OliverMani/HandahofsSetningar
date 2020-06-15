@@ -5,7 +5,7 @@ import generator
 @route('/')
 def index():
 	response.content_type = 'text/html'
-	return static_file("index.html", root="src/webserver/html/")
+	return template('src/webserver/html/index.tpl')
 
 @route('/random')
 def get_random():
