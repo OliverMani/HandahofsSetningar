@@ -4,7 +4,8 @@ import generator
 
 @route('/')
 def index():
-	return static_file("html/root.tpl", root="src/webserver/")
+	response.content_type = 'text/html'
+	return static_file("index.html", root="src/webserver/html/")
 
 @route('/random')
 def get_random():
