@@ -1,3 +1,4 @@
 # Íslensk Gervigreind
-Basic gervigreind, segir random setningar á íslensku
-Byggir á bin.arnastofnun.is
+Random setningar á íslensku, byggir á bin.arnastofnun.is
+
+https://random-setningar.herokuapp.com/

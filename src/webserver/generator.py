@@ -7,6 +7,12 @@ class Generator:
 		self.stillingar = {}
 		self.setningar = setningar
 		self.mappa = mappa
+		self.personur = {
+			'1P':['ég', 'vér'],
+			'2P':['þú', 'þér'],
+			'3P':['hann', 'hún', 'það']
+		}
+
 
 	def finna_setningu(self):
 		skra = open(self.setningar, 'r', encoding='utf-8')
@@ -28,14 +34,19 @@ class Generator:
 		return nidurstada[:-1] + "."
 
 	def fa_ord(self, kodi):
-		if kodi[0] != '{' or kodi[-1] != '}':
+
+		kodi2 = kodi.replace('.','').replace(',','')
+		#print(kodi, "kodi2:", kodi2)
+		if kodi2[0] != '{' or kodi2[-1] != '}':
 			return kodi
-		gogn = kodi[1:-1]
+		gogn = kodi[kodi.index('{') + 1:(len(kodi) - kodi[::-1].index('}'))-1]
 		for key, value in self.stillingar.items():
 			gogn = gogn.replace('{' + key + '}', value['ord'])
 
 		flokkur = gogn.split(':')[0]
 		mynd = gogn.split(':')[1]
+		
+		#print("Stillingar:", self.stillingar)
 		if len(gogn.split(':')) > 2:
 			lykill = gogn.split(':')[2].split("=")[0]
 			gildi = gogn.split(':')[2].split("=")[1]
@@ -48,7 +59,7 @@ class Generator:
 			allt = skra.read()
 			listi = allt.split("\n")
 			while True:
-				prufa = listi[random.randint(0, len(listi))]
+				prufa = listi[random.randint(0, len(listi)-1)]
 				fyrirspurn = requests.get('https://bin.arnastofnun.is/api/ord/' + prufa)
 				svar = json.loads(fyrirspurn.content)
 				#print("Syndax:", gogn)
@@ -59,6 +70,17 @@ class Generator:
 							if self.stillingar[x]['ord'] == 'kyn':
 								self.stillingar[x]['notad'] = True
 								self.stillingar[x]['ord'] = kyn
+							if flokkur == 'pfn' and self.stillingar[x]['ord'] == 'persona':
+								#print("Persónufornafn:", svar[0].get('bmyndir'))
+								if svar[0].get('bmyndir')[0].get('b') in self.personur['1P']:
+									self.stillingar[x]['notad'] = True
+									self.stillingar[x]['ord'] = '1P'
+								elif svar[0].get('bmyndir')[0].get('b') in self.personur['2P']:
+									self.stillingar[x]['notad'] = True
+									self.stillingar[x]['ord'] = '2P'
+								elif svar[0].get('bmyndir')[0].get('b') in self.personur['3P']:
+									self.stillingar[x]['notad'] = True
+									self.stillingar[x]['ord'] = '3P'
 					
 					myndir = svar[0].get('bmyndir')
 					if myndir == None:
@@ -72,3 +94,5 @@ class Generator:
 						#print(fall)
 						x += 1
 					break
+
+
