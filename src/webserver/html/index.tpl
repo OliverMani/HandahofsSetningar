@@ -33,6 +33,11 @@
 
 	</style>
 	<meta charset="utf-8">
+	<meta name="description" content="Handahófskenndar setningar á íslensku.">
+	<meta name="keywords" content="random, setningar, íslenska, icelandic">
+	<meta name="author" content="Óliver Máni">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </head>
 <body>
 	<div class="nav">
@@ -55,7 +60,7 @@
 		</script>
 	</div>
 	<div class="footer">
-		<p>Búið til að <a href="https://olivermani.com/" target="_blank">Óliver Mána</a>, kóði: <a href="https://github.com/OliverMani/HandahofsSetningar">https://github.com/OliverMani/HandahofsSetningar</a></p>
+		<p>Búið til af <a href="https://olivermani.com/" target="_blank">Óliver Mána</a>, kóði: <a href="https://github.com/OliverMani/HandahofsSetningar">https://github.com/OliverMani/HandahofsSetningar</a></p>
 	</div>
 </body>
 </html>
