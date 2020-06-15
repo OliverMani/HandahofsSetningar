@@ -1,10 +1,10 @@
 from bottle import *
-from sys import argv, path
+from sys import argv
 import generator
 
 @route('/')
 def index():
-	return return static_file("html/root.tpl", root="src/webserver/")
+	return static_file("html/root.tpl", root="src/webserver/")
 
 @route('/random')
 def get_random():
