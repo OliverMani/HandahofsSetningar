@@ -37,7 +37,10 @@
 	<meta name="keywords" content="random, setningar, íslenska, icelandic">
 	<meta name="author" content="Óliver Máni">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	<meta property="og:title" content="Handahófskenndar Setningar á Íslensku!" />
+	<meta property="og:site_name" content="RandomSetningar">
+	<meta property="og:description" content="Vefsíða sem býr til handahófskenndar setningar á íslensku!" />
+	<meta property="og:locale" content="is_IS">
 </head>
 <body>
 	<div class="nav">
