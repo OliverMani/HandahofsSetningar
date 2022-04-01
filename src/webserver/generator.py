@@ -2,6 +2,10 @@ import requests
 import random
 import json
 
+class BINDownException(Exception):
+	def __init__(self, msg='BIN down'):
+		self.message = msg
+
 class Generator:
 	def __init__(self, mappa='resources/ord/', setningar='resources/setningar.txt'):
 		self.stillingar = {}
@@ -21,17 +25,21 @@ class Generator:
 		return linur[random.randint(0, len(linur))-1]
 
 	def bua_til_setningu(self):
-		setning = self.finna_setningu().split(' ');
-		nidurstada = ""
-		for x in setning:
-			_ord = self.fa_ord(x)
-			while _ord == None:
+		try:
+			setning = self.finna_setningu().split(' ');
+			nidurstada = ""
+			for x in setning:
 				_ord = self.fa_ord(x)
-			nidurstada += _ord + " "
-		stor_stafur = list(nidurstada)
-		stor_stafur[0] = stor_stafur[0].upper()
-		nidurstada = ''.join(stor_stafur)
-		return nidurstada[:-1] + "."
+				while _ord == None:
+					_ord = self.fa_ord(x)
+				nidurstada += _ord + " "
+			stor_stafur = list(nidurstada)
+			stor_stafur[0] = stor_stafur[0].upper()
+			nidurstada = ''.join(stor_stafur)
+			return nidurstada[:-1] + "."
+		except BINDownException as e:
+			print("BIN DOWN")
+			return e.message
 
 	def fa_ord(self, kodi):
 
@@ -45,7 +53,7 @@ class Generator:
 
 		flokkur = gogn.split(':')[0]
 		mynd = gogn.split(':')[1]
-		
+
 		#print("Stillingar:", self.stillingar)
 		if len(gogn.split(':')) > 2:
 			lykill = gogn.split(':')[2].split("=")[0]
@@ -61,6 +69,8 @@ class Generator:
 			while True:
 				prufa = listi[random.randint(0, len(listi)-1)]
 				fyrirspurn = requests.get('https://bin.arnastofnun.is/api/ord/' + prufa)
+				if fyrirspurn.status_code >= 500:
+					raise BINDownException("Villa: Þjónusta Árnastofnunar liggur niðri, vinsamlegast reynið aftur síðar!")
 				svar = json.loads(fyrirspurn.content)
 				#print("Syndax:", gogn)
 				if type(svar) == list:
@@ -81,7 +91,7 @@ class Generator:
 								elif svar[0].get('bmyndir')[0].get('b') in self.personur['3P']:
 									self.stillingar[x]['notad'] = True
 									self.stillingar[x]['ord'] = '3P'
-					
+
 					myndir = svar[0].get('bmyndir')
 					if myndir == None:
 						continue
@@ -94,5 +104,3 @@ class Generator:
 						#print(fall)
 						x += 1
 					break
-
-
